@@ -6,7 +6,7 @@ const app = express();
 app.use(cors()); // Allows your GitHub site to talk to this server
 app.use(express.json());
 
-// FIXED: We force v1beta right here at the start
+// FIXED: We force v1beta right here at the start as a second argument
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_KEY, { apiVersion: 'v1beta' });
 
 app.post('/api/translate', async (req, res) => {
@@ -28,7 +28,7 @@ app.post('/api/translate', async (req, res) => {
         res.json({ translation: text });
 
     } catch (error) {
-        // Detailed error for Render Logs
+        // This prints the real reason to your Render Logs
         console.error("DETAILED ERROR:", error.message || error); 
         
         res.status(500).json({ 
@@ -38,5 +38,5 @@ app.post('/api/translate', async (req, res) => {
     }
 });
 
-const PORT = process.env.PORT || 10000; // Render usually prefers 10000
+const PORT = process.env.PORT || 10000; 
 app.listen(PORT, () => console.log(`Brain active on port ${PORT}`));
