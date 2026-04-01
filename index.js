@@ -18,8 +18,14 @@ app.post('/api/translate', async (req, res) => {
 const response = await result.response;
 const text = response.text();
 res.json({ translation: text });
-    } catch (error) {
-        res.status(500).json({ translation: "My brain is a bit fuzzy! Try again?" });
+   } catch (error) {
+        // This line is the "Messenger" that tells Render Logs exactly what went wrong
+        console.error("DETAILED ERROR:", error.message || error); 
+        
+        res.status(500).json({ 
+            translation: "My brain is a bit fuzzy! Try again?",
+            debug: error.message // This sends the error back to your browser too!
+        });
     }
 });
 
