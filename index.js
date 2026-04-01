@@ -11,30 +11,21 @@ const genAI = new GoogleGenerativeAI(process.env.GEMINI_KEY, { apiVersion: 'v1be
 
 app.post('/api/translate', async (req, res) => {
     try {
-        const model = genAI.getGenerativeModel({ 
-            model: "gemini-1.5-flash" 
-        });
+        // We define the model AND the version right here inside the request
+        const model = genAI.getGenerativeModel(
+            { model: "gemini-1.5-flash" },
+            { apiVersion: 'v1beta' } 
+        );
 
-        // Instructions for Darinka
-        const prompt = `System Instruction: You are Darinka. You have Intermediate III Quechua skills. 
-        When asked to translate, give the Quechua phrase and a 1-sentence friendly explanation.
-        
-        User wants to translate: "${req.body.phrase}"`;
+        const prompt = `System Instruction: You are Darinka. Translate: "${req.body.phrase}"`;
 
         const result = await model.generateContent(prompt);
         const response = await result.response;
-        const text = response.text();
-        
-        res.json({ translation: text });
+        res.json({ translation: response.text() });
 
     } catch (error) {
-        // This prints the real reason to your Render Logs
-        console.error("DETAILED ERROR:", error.message || error); 
-        
-        res.status(500).json({ 
-            translation: "My brain is a bit fuzzy! Try again?",
-            debug: error.message 
-        });
+        console.error("DETAILED ERROR:", error.message);
+        res.status(500).json({ translation: "Fuzzy brain!", debug: error.message });
     }
 });
 
