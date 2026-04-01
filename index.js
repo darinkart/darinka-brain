@@ -15,7 +15,9 @@ app.post('/api/translate', async (req, res) => {
             systemInstruction: "You are Darinka. You have Intermediate III Quechua skills. When asked to translate, give the Quechua phrase and a 1-sentence explanation. Keep it short and friendly."
         });
         const result = await model.generateContent(`Translate to Quechua: ${req.body.phrase}`);
-        res.json({ translation: result.response.text() });
+const response = await result.response;
+const text = response.text();
+res.json({ translation: text });
     } catch (error) {
         res.status(500).json({ translation: "My brain is a bit fuzzy! Try again?" });
     }
