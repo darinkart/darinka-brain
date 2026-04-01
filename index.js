@@ -10,8 +10,10 @@ const genAI = new GoogleGenerativeAI(process.env.GEMINI_KEY);
 
 app.post('/api/translate', async (req, res) => {
     try {
-       const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash-latest", // Added "-latest" systemInstruction: "You are Darinka. You have Intermediate III Quechua skills. When asked to translate, give the Quechua phrase and a 1-sentence explanation. Keep it short and friendly." 
-});
+       const model = genAI.getGenerativeModel(
+    { model: "gemini-1.5-flash" }, 
+    { apiVersion: 'v1beta' }
+);
         const result = await model.generateContent(`Translate to Quechua: ${req.body.phrase}`);
 const response = await result.response;
 const text = response.text();
